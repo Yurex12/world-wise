@@ -1,44 +1,128 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 
 const CitiesContext = createContext();
 const BASE_URL = 'http://localhost:8080';
 
+const initialState = {
+  cities: [],
+  isLoading: false,
+  currentCity: {},
+  error: '',
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'loading':
+      return { ...state, isLoading: true };
+    case 'cities/loaded':
+      return {
+        ...state,
+        isLoading: false,
+        cities: action.payload,
+      };
+    case 'city/deleted':
+      return {
+        ...state,
+        isLoading: false,
+        cities: state.cities.filter((city) => city.id !== action.payload),
+      };
+    case 'city/created':
+      return {
+        ...state,
+        isLoading: false,
+        cities: [...state.cities, action.payload],
+      };
+    case 'rejected':
+      return { ...state, isLoading: false, error: action.payload };
+    default:
+      throw new Error('Unkwown action');
+  }
+}
+
 function CitiesProvider({ children }) {
-  const [cities, setCities] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentCity, setCurrentCity] = useState({});
+  const [{ cities, isLoading, currentCity }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  // const [cities, setCities] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [currentCity, setCurrentCity] = useState({});
   // const [isLoadingCity, setIsLoadingCity] = useState(false);
 
   useEffect(() => {
     async function fetchCities() {
+      dispatch({ type: 'loading' });
       try {
-        setIsLoading(true);
         const res = await fetch(`${BASE_URL}/cities`);
         if (!res.ok) throw new Error('Error fetching cities');
         const data = await res.json();
-        setCities(data);
+
+        dispatch({ type: 'cities/loaded', payload: data });
       } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
+        dispatch({
+          type: 'rejected',
+          payload: 'There was an error loading the city',
+        });
       }
     }
     fetchCities();
   }, []);
 
   async function fetchCity(id) {
+    dispatch({ type: 'loading' });
     try {
-      // setIsLoadingCity(true);
-      setIsLoading(true);
       const res = await fetch(`${BASE_URL}/cities/${id}`);
-      if (!res.ok) throw new Error('Error fetching cities');
+
       const data = await res.json();
-      setCurrentCity(data);
+
+      dispatch({ type: 'city/loaded', payload: data });
+    } catch (err) {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error loading the city',
+      });
+    }
+  }
+
+  async function createCity(newCity) {
+    dispatch({ type: 'loading' });
+
+    try {
+      const res = await fetch(`${BASE_URL}/cities`, {
+        method: 'POST',
+        body: JSON.stringify(newCity),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await res.json();
+      dispatch({ type: 'city/created', payload: data });
     } catch (error) {
-      console.log(error);
-    } finally {
-      // setIsLoadingCity(false);
-      setIsLoading(false);
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error creating the city',
+      });
+    }
+  }
+  async function deleteCity(id) {
+    try {
+      dispatch({ type: 'loading' });
+
+      await fetch(`${BASE_URL}/cities/${id}`, {
+        method: 'DELETE',
+      });
+
+      dispatch({ type: 'city/deleted', payload: id });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error deleting the city',
+      });
     }
   }
 
@@ -47,6 +131,8 @@ function CitiesProvider({ children }) {
     isLoading,
     currentCity,
     fetchCity,
+    createCity,
+    deleteCity,
   };
   return (
     <CitiesContext.Provider value={value}>{children}</CitiesContext.Provider>

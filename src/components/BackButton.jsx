@@ -4,7 +4,13 @@ import Button from './Button';
 function BackButton() {
   const navigate = useNavigate();
   return (
-    <Button desc='back' onClick={() => navigate(-1)}>
+    <Button
+      desc='back'
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(-1);
+      }}
+    >
       &larr; Back
     </Button>
   );

@@ -1,18 +1,6 @@
 {
   "cities": [
     {
-      "cityName": "Lisbon",
-      "country": "Portugal",
-      "emoji": "🇵🇹",
-      "date": "2027-10-31T15:59:59.138Z",
-      "notes": "My favorite city so far!",
-      "position": {
-        "lat": 38.727881642324164,
-        "lng": -9.140900099907554
-      },
-      "id": 73930385
-    },
-    {
       "cityName": "Madrid",
       "country": "Spain",
       "emoji": "🇪🇸",
@@ -37,28 +25,28 @@
       "id": 98443197
     },
     {
-      "cityName": "Faro",
-      "country": "Spain",
-      "emoji": "🇪🇸",
-      "date": "2027-07-15T08:22:53.976Z",
-      "notes": "",
+      "cityName": "Al Jawf",
+      "country": "Libya",
+      "emoji": "🇱🇾",
+      "date": "2024-08-24T14:04:22.473Z",
+      "notes": "it was and amazing trip",
       "position": {
-        "lat": 40.46635901755316,
-        "lng": -3.7133789062500004
+        "lat": "22.34919067958102",
+        "lng": "22.34919067958102"
       },
-      "id": 263737828
+      "id": 98443198
     },
     {
-      "cityName": "Nigeria",
-      "country": "Germany",
-      "emoji": "🇩🇪",
-      "date": "2027-02-12T09:24:11.863Z",
-      "notes": "Amazing 😃",
+      "cityName": "Pankshin",
+      "country": "Nigeria",
+      "emoji": "🇳🇬",
+      "date": "2024-08-24T14:38:29.210Z",
+      "notes": "Amazing",
       "position": {
-        "lat": 52.53586782505711,
-        "lng": 13.376933665713324
+        "lat": "9.326087629981377",
+        "lng": "9.326087629981377"
       },
-      "id": 3764838
+      "id": 98443199
     }
   ]
 }
